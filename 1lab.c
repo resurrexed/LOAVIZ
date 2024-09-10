@@ -31,12 +31,19 @@ int main()
         *(p+i)=rand() % 100;
         printf("%d ", *(p+i));
     }
-    printf("\n");
-    int matrix[10][10]={0};
-    int sum=0;
-    for(int i=0;i<10;i++)
+    printf("\nEnter size of matrix ");
+    int size1;
+    scanf("%d",&size1);
+    int** matrix=malloc(size1*sizeof(int*));
+    for(int i=0;i<size1;i++)
     {
-        for(int j=0;j<10;j++)
+        matrix[i]=(int*)malloc(size1*sizeof(int));
+    }
+    matrix[0][0]=0;
+    int sum=0;
+    for(int i=0;i<size1;i++)
+    {
+        for(int j=0;j<size1;j++)
         {
             matrix[i][j]=rand() % 100;
             sum+=matrix[i][j];
@@ -45,7 +52,7 @@ int main()
         printf(" %d\n", sum);
         sum=0;
     }
-    int amount=2;
+    int amount=4;
     struct students{
         char Name[20];
         char Surname[20];
@@ -65,7 +72,53 @@ int main()
     }
     char searched_name[20], searched_surname[20], searched_facult[20];
     int searched_idcard;
-    printf("\nEnter searched students name ");
+    printf("Enter parametr for search\n1-Name\n2-Surname\n3-Facult\n4-IdCard\n");
+    int parametr=0;
+    scanf("%d",&parametr);
+    while(parametr<1 || parametr>4)
+    {
+        printf("Enter parametr for search\n1-Name\n2-Surname\n3-Facult\n4-IdCard\n");
+        scanf("%d",&parametr);
+    }
+    if(parametr==1)
+    {
+        printf("\nEnter searched students name ");
+        scanf("%20s", searched_name);
+        for(int i=0;i<amount;i++)
+        {
+            if(strcmp(searched_name, stud[i].Name)==0) printf("\nFinded student %d in struct", i);
+        }
+    }
+    else if(parametr==2)
+    {
+        printf("\nEnter searched students surname ");
+        scanf("%20s", searched_surname);
+        for(int i=0;i<amount;i++)
+        {
+            if(strcmp(searched_surname, stud[i].Surname)==0) printf("\nFinded student %d in struct", i);
+        }
+    }
+    else if(parametr==3)
+    {
+        printf("\nEnter searched students faculty ");
+        scanf("%20s", searched_facult);
+        for(int i=0;i<amount;i++)
+        {
+            if(strcmp(searched_facult, stud[i].Facult)==0) printf("\nFinded student %d in struct", i);
+        }
+    }
+    else
+    {
+        printf("\nEnter searched students IdCard ");
+        scanf("%20s", searched_idcard);
+        for(int i=0;i<amount;i++)
+        {
+            if(searched_idcard==stud[i].IdCard) printf("\nFinded student %d in struct", i);
+        }
+    }
+ 
+
+   /* printf("\nEnter searched students name ");
     scanf("%20s", searched_name);
     printf("\nEnter searched students surname ");
     scanf("%20s", searched_surname);
@@ -79,12 +132,13 @@ int main()
         if(strcmp(searched_surname, stud[i].Surname)==0)
             if(strcmp(searched_name, stud[i].Name)==0)
                 if(strcmp(searched_facult, stud[i].Facult)==0)
-                    if(searched_idcard==stud[i].IdCard)
+                   // if(searched_idcard==stud[i].IdCard)
                     {
                         printf("\nFinded student %d in struct", i);
                         finded=1;
                     }
+
     }
-    if(finded==0) printf("\nDon't find");
+    if(finded==0) printf("\nDon't find");*/
     return 0;
 }
