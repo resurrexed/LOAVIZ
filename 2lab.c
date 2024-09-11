@@ -43,6 +43,8 @@ int main(void)
     i++;
   }
     int elem_c=0;
+  printf("do some calculating");
+  start=clock();
   for(i=0;i<size;i++)
   {
     for(j=0;j<size;j++)
@@ -55,8 +57,8 @@ int main(void)
       }
     }
   }
-
-
+  end=clock()-start;
+  printf("Time of multiplying matrix is %f", end/CLOCKS_PER_SEC);
   return(0);
 }
 
