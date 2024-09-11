@@ -58,7 +58,7 @@ int main(void)
     }
   }
   end=clock()-start;
-  printf("Time of multiplying matrix is %f", end/CLOCKS_PER_SEC);
+  printf("Time of multiplying matrix is %f", (float)end/CLOCKS_PER_SEC);
   return(0);
 }
 
