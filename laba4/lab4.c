@@ -49,7 +49,7 @@ void print_tree(struct Node *r, int l)
 	printf("%d\n", r->data);
 	print_tree(r->left,  l+1);
 }
-struct Node *FINDinTREE(struct Node *root, struct Node *r, int searched_data) // Сложность в среднем log(n) в худшем n
+struct Node *FINDinTREE(struct Node *root, struct Node *r, int searched_data) // Сложность в среднем log2(n) в худшем n
 {
    if(r==NULL) return NULL;
    if(searched_data == r->data) return r;
