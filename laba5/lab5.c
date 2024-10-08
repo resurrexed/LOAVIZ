@@ -4,8 +4,10 @@
 int main() 
 {
     srand(time(NULL));
-    int size=6, counter=0;
-    int matrixs[size][size];
+    int size=0, counter=0;
+    scanf("%d", &size);
+    int **matrixs= malloc(sizeof(int*)* size);
+    for(int i=0;i<size;i++) matrixs[i]= (int*) malloc(sizeof(int) * size);
     for(int i=0;i<size;i++)
     {
         matrixs[i][i]=0;
@@ -44,7 +46,9 @@ int main()
        else if(peak==size) printf("%d peak is dominating\n", i+1);
        peak=0;
     }
-    int j_b=0, matrixi[size][counter];
+    int j_b=0;
+    int **matrixi= malloc(sizeof(int*)* size);
+    for(int i=0;i<counter;i++) matrixi[i]= (int*) malloc(sizeof(int) * counter);
     for(int i=0; i<size; i++)
     {
         for(int j=0; j<counter; j++)
