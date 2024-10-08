@@ -4,44 +4,75 @@
 int main() 
 {
     srand(time(NULL));
-    int size=6;
-    int matrix[size][size];
+    int size=6, counter=0;
+    int matrixs[size][size];
     for(int i=0;i<size;i++)
     {
-        matrix[i][i]=0;
+        matrixs[i][i]=0;
         for(int j=i+1;j<size;j++)
         {
-            matrix[i][j]=rand() % 2;
-            matrix[j][i]=matrix[i][j];
+            matrixs[i][j]=rand() % 2;
+            matrixs[j][i]=matrixs[i][j];
         }
     }
     for(int i=0;i<size;i++)
     {
         for(int j=0;j<size;j++)
         {
-            printf("%d ", matrix[i][j]);
+            printf("%d ", matrixs[i][j]);
         }
         printf("\n"); 
     }
-    int counter=0;
     for(int i=0;i<size;i++)
     {
         for(int j=0;j<size;j++)
         {
-            if(matrix[i][j]==1) counter++;
+            if(matrixs[i][j]==1) counter++;
         }
     }
-    printf("\nsize is %d\n", counter/2);
+    counter=counter/2;
+    printf("\nsize is %d\n", counter);
     int peak=0;
     for(int i=0;i<size;i++)
     {
        for(int j=0;j<size;j++)
        {
-           if(matrix[i][j]==1) peak++;
+           if(matrixs[i][j]==1) peak++;
        }
        if(peak==0) printf("%d peak is isolated\n", i+1);
        else if(peak==1) printf("%d peak is end\n", i+1);
        else if(peak==size) printf("%d peak is dominating\n", i+1);
+       peak=0;
+    }
+    int j_b=0, matrixi[size][counter];
+    for(int i=0; i<size; i++)
+    {
+        for(int j=0; j<counter; j++)
+            matrixi[i][j]=0;
+    }
+    for(int i=0; i<size; i++)
+        for(int j=i+1; j<size; j++)
+            if(matrixs[i][j])
+            {
+                matrixi[i][j_b]=1;
+                matrixi[j][j_b]=1;
+                j_b++;
+            }
+    for(int i=0;i<size;i++)
+    {
+        for(int j=0;j<counter;j++) printf("%d ", matrixi[i][j]);
+        printf("\n");
+    }
+    printf("size is %d\n", counter);
+     for(int i=0;i<size;i++)
+    {
+       for(int j=0;j<counter;j++)
+       {
+           if(matrixi[i][j]==1) peak++;
+       }
+       if(peak==0) printf("%d peak is isolated\n", i+1);
+       else if(peak==1) printf("%d peak is end\n", i+1);
+       else if(peak==counter) printf("%d peak is dominating\n", i+1);
        peak=0;
     }
 }
