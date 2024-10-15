@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+int** CreateMatrix(int size)
+{
+    int** matrix=malloc(sizeof(int*)*size);
+    for(int i=0;i<size;i++) matrix[i]=(int*) malloc(sizeof(int)*size);
+    return matrix;
+}
 void PrintMatrix(int** matrix, int size)
 {
 	for(int i=0;i<size;i++)
@@ -83,8 +89,7 @@ void Merge(int** matrix1, int** matrix2, int size)
 }
 int** DecartMult(int** matrix1, int** matrix2, int size)
 {
-    int** matrix3=malloc(sizeof(int*)*size);
-    for(int i=0;i<size;i++) matrix3[i]=(int*) malloc(sizeof(int)*size);
+    int** matrix3=CreateMatrix(size);
     for(int i=0;i<size;i++)
     {
         for(int j=0;j<size;j++)
@@ -92,7 +97,7 @@ int** DecartMult(int** matrix1, int** matrix2, int size)
             int elem_c=0;
             for(int r=0;r<size;r++)
             {
-                elem_c=elem_c | (matrix1[i][r] & matrix2[r][j]);
+                 elem_c=elem_c | (matrix1[i][r] & matrix2[r][j]);
                  matrix3[i][j]=elem_c;
             }
         }
@@ -105,10 +110,8 @@ int main()
     int size=0, counter=0;
     printf("Enter amount of vortex- ");
     scanf("%d", &size);
-    int **a= malloc(sizeof(int*)* size);
-    int **b= malloc(sizeof(int*)* size);
-    for(int i=0;i<size;i++) a[i]= (int*) malloc(sizeof(int) * size);
-    for(int i=0;i<size;i++) b[i]= (int*) malloc(sizeof(int) * size);
+    int **a=CreateMatrix(size);
+    int **b=CreateMatrix(size);
     for(int i=0;i<size;i++)
     {
         a[i][i]=0;
