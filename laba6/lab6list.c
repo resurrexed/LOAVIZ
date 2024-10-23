@@ -5,16 +5,32 @@
 struct Node {
     int vertex;
     struct Node* next;
-};
+}Node;
 struct Graph {
     int numVertices;
     struct Node** adjLists;
-};
+}Graph;
 struct Node* createNode(int v) {
     struct Node* newNode = malloc(sizeof(struct Node));
     newNode->vertex = v;
     newNode->next = NULL;
     return newNode;
+}
+int UniqeEdge(struct Graph* graph, int src, int dest)
+{
+    struct Node* temp=graph->adjLists[src];
+    while(temp)
+    {
+        if(temp->vertex ==dest) return 0;
+        temp=temp->next;
+    }
+    temp= graph->adjLists[dest];
+    while(temp)
+    {
+        if(temp->vertex == src) return 0;
+        temp=temp->next;
+    }
+    return 1;
 }
 struct Graph* createGraph(int vertices) 
 {
@@ -30,20 +46,22 @@ struct Graph* createGraph(int vertices)
 void GenerateGraph(struct Graph* graph, int vert)
 {
     int counter=0;
-    do{
+    while(counter<vert)
+    {
         int src, dest;
         src= rand() % vert;
-        do{
-            dest=rand() % vert;
-        }while(src==dest);
-        struct Node* newNode = createNode(dest);
-        newNode->next = graph->adjLists[src];
-        graph->adjLists[src] = newNode;
-        newNode = createNode(src);
-        newNode->next = graph->adjLists[dest];
-        graph->adjLists[dest] = newNode;
-        counter++;
-    }while(counter<vert);
+        dest=rand() % vert;
+        if(src!=dest && UniqeEdge(graph, src, dest))
+        {
+            struct Node* newNode = createNode(dest);
+            newNode->next = graph->adjLists[src];
+            graph->adjLists[src] = newNode;
+            newNode = createNode(src);
+            newNode->next = graph->adjLists[dest];
+            graph->adjLists[dest] = newNode;
+            counter++;
+        }
+    }
 }
 void PrintGraph(struct Graph* graph)
 {

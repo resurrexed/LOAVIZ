@@ -5,7 +5,21 @@ int** CreateMatrix(int size)
 {
     int** matrix=malloc(sizeof(int*)*size);
     for(int i=0;i<size;i++) matrix[i]=(int*) malloc(sizeof(int)*size);
+    for(int i=0;i<size;i++)
+    {
+        matrix[i][i]=0;
+        for(int j=i+1;j<size;j++)
+        {
+            	matrix[i][j]=rand() % 2;
+            	matrix[j][i]=matrix[i][j];
+    	}
+	}
     return matrix;
+}
+void NullMatrix(int size, int** matrix)
+{
+    for(int i=0;i<size;i++)
+        for(int j=0;j<size;j++) matrix[i][j]=0;
 }
 void PrintMatrix(int** matrix, int size)
 {
@@ -20,19 +34,21 @@ void PrintMatrix(int** matrix, int size)
 }
 void DeleteVortex(int** matrix, int size, int deleted_vortex)
 {
-    for(int i=0;i<size;i++)
+    for(int i=deleted_vortex;i<size-1;i++)
     {
-        if(i==deleted_vortex)
-        {
             for(int j=0;j<size;j++)
             {
-                matrix[i][j]=0;
-                matrix[j][i]=0;
+                matrix[i][j]=matrix[i+1][j];
             }
-            break;
-        }
-        else continue;
     }
+    for(int i=0;i<size;i++)
+    {
+            for(int j=deleted_vortex;j<size-1;j++)
+            {
+                matrix[i][j]=matrix[i+1][j];
+            }
+    }
+
 }
 void Identification(int** matrix, int size, int ident_vortex1, int ident_vortex2)
 {
@@ -53,52 +69,71 @@ void Identification(int** matrix, int size, int ident_vortex1, int ident_vortex2
             }
         }
     }
+    DeleteVortex(matrix, size, ident_vortex2);
 }
-void Intersection(int** matrix1, int** matrix2, int size)
+int** Intersection(int** matrix1, int** matrix2, int size1, int size2)
 {
-    for(int i=0;i<size;i++)
-    {
-        for(int j=i+1;j<size;j++)
-        {
-            matrix1[i][j]=matrix1[i][j] & matrix2[i][j];
-            matrix1[j][i]=matrix1[i][j];
-        }
-    }
-}
-void RingSum(int** matrix1, int** matrix2, int size)
-{
-    for(int i=0;i<size;i++)
-    {
-        for(int j=i+1;j<size;j++)
-        {
-            matrix1[i][j]=matrix1[i][j]^matrix2[i][j];
-            matrix1[j][i]=matrix1[i][j];
-        }
-    }
-}
-void Merge(int** matrix1, int** matrix2, int size)
-{
-    for(int i=0;i<size;i++)
-    {
-        for(int j=i+1;j<size;j++)
-        {
-            matrix1[i][j]=matrix1[i][j] | matrix2[i][j];
-            matrix1[j][i]=matrix1[i][j];
-        }
-    }
-}
-int** DecartMult(int** matrix1, int** matrix2, int size)
-{
+    int size;
+    if(size1>size2) size=size2;
+    else size=size1;
     int** matrix3=CreateMatrix(size);
+    NullMatrix(size, matrix3);
     for(int i=0;i<size;i++)
     {
-        for(int j=0;j<size;j++)
+        for(int j=i+1;j<size;j++)
         {
-            int elem_c=0;
-            for(int r=0;r<size;r++)
-            {
-                 elem_c=elem_c | (matrix1[i][r] & matrix2[r][j]);
-                 matrix3[i][j]=elem_c;
+            matrix3[i][j]=matrix1[i][j] & matrix2[i][j];
+            matrix3[j][i]=matrix3[i][j];
+        }
+    }
+    return matrix3;
+}
+int** RingSum(int** matrix1, int** matrix2, int size1, int size2)
+{
+    int size;
+    if(size1>size2) size=size1;
+    else size=size2;
+    int** matrix3=CreateMatrix(size);
+    NullMatrix(size, matrix3);
+    for(int i=0;i<size;i++)
+    {
+        for(int j=i+1;j<size;j++)
+        {
+            matrix3[i][j]=matrix1[i][j]^matrix2[i][j];
+            matrix3[j][i]=matrix3[i][j];
+        }
+    }
+    return matrix3;
+}
+int** Merge(int** matrix1, int** matrix2, int size1, int size2)
+{
+    int size;
+    if(size1>size2) size=size1;
+    else size=size2;
+    int** matrix3=CreateMatrix(size);
+    NullMatrix(size, matrix3);
+    for(int i=0;i<size;i++)
+    {
+        for(int j=i+1;j<size;j++)
+        {
+            matrix3[i][j]=matrix1[i][j] | matrix2[i][j];
+            matrix3[j][i]=matrix3[i][j];
+        }
+    }
+    return matrix3;
+}
+int** DecartMult(int** matrix1, int** matrix2, int size1, int size2)
+{
+    int size=size1*size2;
+    int** matrix3=CreateMatrix(size);
+    for (int i = 0; i < size1; ++i) {
+        for (int j = 0; j < size2; ++j) {
+            for (int k = 0; k < size1; ++k) {
+                for (int l = 0; l < size2; ++l) {
+                    if ((matrix1[i][k] && j == l) || (matrix2[j][l] && i == k)) {
+                        matrix3[i * size2 + j][k * size2 + l] = 1;
+                    }
+                }
             }
         }
     }
@@ -107,27 +142,17 @@ int** DecartMult(int** matrix1, int** matrix2, int size)
 int main() 
 {
 	srand(time(NULL));
-    int size=0, counter=0;
+    int size1=0, size2=0, counter=0;
     printf("Enter amount of vortex- ");
-    scanf("%d", &size);
-    int **a=CreateMatrix(size);
-    int **b=CreateMatrix(size);
-    for(int i=0;i<size;i++)
-    {
-        a[i][i]=0;
-        b[i][i]=0;
-        for(int j=i+1;j<size;j++)
-        {
-            	a[i][j]=rand() % 2;
-            	a[j][i]=a[i][j];
-                b[i][j]=rand() % 2;
-        		b[j][i]=b[i][j];
-    	}
-	}
+    scanf("%d", &size1);
+    printf("Enter amount of vortex- ");
+    scanf("%d", &size2);
+    int **a=CreateMatrix(size1);
+    int **b=CreateMatrix(size2);
     printf("fisrt matrix\n");
-    PrintMatrix(a, size);
+    PrintMatrix(a, size1);
     printf("second matrix\n");
-    PrintMatrix(b, size);
+    PrintMatrix(b, size2);
 	int operation;
 	do
 	{
@@ -144,9 +169,10 @@ int main()
                 printf("Enter two number of vortex to ident starting from zero- ");
                 scanf("%d", &ident_vortex1);
                 scanf("%d", &ident_vortex2);
-            }while((ident_vortex1>size || ident_vortex1<0)&&(ident_vortex2>size || ident_vortex2<0));
-            Identification(a, size, ident_vortex1,ident_vortex2);
-			PrintMatrix(a, size);
+            }while((ident_vortex1>size1 || ident_vortex1<0)&&(ident_vortex2>size1 || ident_vortex2<0));
+            Identification(a, size1, ident_vortex1,ident_vortex2);
+            size1--;
+			PrintMatrix(a, size1);
 			break;
 		case 2:
             int ident_vortex3, ident_vortex4;
@@ -154,41 +180,48 @@ int main()
                 printf("Enter two number of vortex to tighten rib starting from zero- ");
                 scanf("%d", &ident_vortex3);
                 scanf("%d", &ident_vortex4);
-            }while((ident_vortex3-ident_vortex4==1 || ident_vortex3-ident_vortex4==1)&&(ident_vortex3>size || ident_vortex3<0)&&(ident_vortex4>size || ident_vortex4<0));
-            Identification(a, size, ident_vortex3 ,ident_vortex4);
-			PrintMatrix(a, size);
+            }while((ident_vortex3>size1 || ident_vortex3<0)&&(ident_vortex4>size1 || ident_vortex4<0)&&(a[ident_vortex3][ident_vortex4]==1));
+            Identification(a, size1, ident_vortex3 ,ident_vortex4);
+            size1--;
+			PrintMatrix(a, size1);
 			break;
 		case 3:
             int deleted_vortex;
             do{
                 printf("Enter number vortex to delete starting from zero- ");
                 scanf("%d", &deleted_vortex);
-            }while(deleted_vortex>size || deleted_vortex<0);
-            DeleteVortex(a, size, deleted_vortex);
-			PrintMatrix(a, size);
+            }while(deleted_vortex>size1 || deleted_vortex<0);
+            DeleteVortex(a, size1, deleted_vortex);
+            size1--;
+			PrintMatrix(a, size1);
 			break;		
 	}
     do{
         printf("Choose operation with 2 graphs\n1-Merge\n2-Intersection\n3-Ring Sum\n4-Decart multiplication\n");
         scanf("%d", &operation);
     }while(operation<=0 || operation >4);
+    int size3=0;
+    if(size1>size2) size3=size1;
+    else size3=size2;
 	switch(operation)
     {
         case 1:
-            Merge(a, b, size);
-            PrintMatrix(a, size);            
+            int** c=Merge(a, b, size1, size2);
+            PrintMatrix(c, size3);            
             break;
         case 2:
-            Intersection(a, b, size);
-            PrintMatrix(a, size);
+            int** d=Intersection(a, b, size1, size2);
+            if(size1>size2) size3=size2;
+            else size3=size1;
+            PrintMatrix(d, size3);
             break;
         case 3: 
-            RingSum(a, b, size);
-            PrintMatrix(a, size);           
+            int** e=RingSum(a, b, size1, size2);
+            PrintMatrix(e, size3);           
             break;
         case 4:
-            int** c=DecartMult(a, b, size);
-            PrintMatrix(c, size);
+            int** f=DecartMult(a, b, size1, size2);
+            PrintMatrix(f, size1*size2);
             break;
     }
 }
