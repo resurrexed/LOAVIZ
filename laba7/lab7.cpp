@@ -5,80 +5,60 @@
 #include <stack>
 #include <vector>
 using namespace std;
-class Matrix{
+#include <iostream>
+#include <vector>
+#include <queue>
+
+class Matrix {
+private:
   int size;
-  int** matrix;
-  bool* NUM;
-  int counter=0;
+  vector<vector<int>> matrix;
+  vector<bool> NUM; 
 public:
-  void Check_false();
-  void SetSize(int size);
-  void CreateMatrix();
-  void PrintMatrix();
-  void Proxod(int v);
-  void DFS(int start);
-};
-void Matrix::SetSize(int size)
-{
-  this->size=size;
-}
-void Matrix::CreateMatrix()
-{
-  matrix=new int*[size];
-  NUM=new bool[size];
-  for(int i=0;i<size;i++) 
+  Matrix(int size) : size(size), matrix(size, std::vector<int>(size)), NUM(size, false) {}
+  void GenerateMatrix() 
   {
-    matrix[i]=new int[size];
-    NUM[i]=false;
-  }
-  for(int i=0;i<size;i++)
-  {
-    for(int j=i+1;j<size;j++)
+    for(int i=0;i<size;i++)
     {
-      matrix[i][j]=rand() % 2;
-      matrix[j][i]=matrix[i][j];
+      matrix[i][i]=0;
+      for(int j=i+1;j<size;j++)
+      {
+        matrix[i][j]=rand() % 2;
+        matrix[j][i]=matrix[i][j];
+      }
+    }
+  } 
+  void PrintMatrix()
+  {
+    for(int i=0;i<size;i++)
+    {
+      for(int j=0;j<size;j++)
+      {
+        cout<<matrix[i][j]<<" ";
+      }
+      cout<<endl;
     }
   }
-}
-void Matrix::PrintMatrix()
-{
-  for(int i=0;i<size;i++)
-  {
-    for(int j=0;j<size;j++)
-    {
-      cout<<matrix[i][j]<<" ";
-    }
-    cout<<endl;
-  }
-}
-void Matrix::Check_false()
-{
-  for(int i=0; i<size;i++)
-  {
-    while(NUM[i]==false)
-    {
-        Matrix::Proxod(i);
+  void Check_false() {
+    for (int i = 0; i < size; i++) {
+      if (!NUM[i]) {
+        Proxod(i);
+      }
     }
   }
-}
-void Matrix::Proxod(int v)
-{
-  NUM[v]=true;
-  cout<<v+1<<" ";
-  for(int i=0;i<size;i++)
-  {
-    if(matrix[v][i]==1 && NUM[i]==false)
-    {
-      Matrix::Proxod(i);  
+  void Proxod(int v) {
+    NUM[v] = true;
+    std::cout << v + 1 << " ";
+
+    for (int i = 0; i < size; i++) {
+      if (matrix[v][i] == 1 && !NUM[i]) {
+        Proxod(i);
+      }
     }
   }
-}
-void Matrix::DFS(int start)
-{
-    // Вектор для хранения информации о посещенных вершинах
+  void DFS(int start)
+  {
     vector<bool> visited(size, false);
-    
-    // Стек для хранения вершин
     stack<int> st;
     
     // Помещаем начальную вершину в стек
@@ -110,17 +90,20 @@ void Matrix::DFS(int start)
             }
         }
     }
-}
+  }
+};
+
 int main()
 {
   srand(time(NULL));
-  Matrix matrix;
-  matrix.SetSize(5);
-  matrix.CreateMatrix();
-  matrix.PrintMatrix();
+  int size;
+  cout<<"Enter number of value ";
+  cin>>size;
+  Matrix graph(size);
+  graph.GenerateMatrix();
+  graph.PrintMatrix();
+  graph.Check_false();
   cout<<endl;
-  matrix.Check_false();
-  cout<<endl;
-  matrix.DFS(0);
+  graph.DFS(0);
   return 0;
 }
