@@ -5,7 +5,7 @@
 struct node
 {
 	char inf[256];  // полезная информация
-    int priority;
+  int priority;
 	struct node *next; // ссылка на следующий элемент 
 }node;
 
@@ -46,7 +46,7 @@ struct node *get_struct(void)
 		return NULL;
 	}
 	strcpy(p->inf, s);
-    p->priority=prior;
+  p->priority=prior;
 	p->next = NULL;
 	return p;		// возвращаем указатель на созданный элемент
 }
@@ -61,28 +61,28 @@ void spstore(void)
         p->next = head; 
         head = p; 
     }
-    else
-    {
-        for(struct node *i = head; i != NULL; i = i->next)
-        {
-            if(i->next)
-            {
-                if(i->next->priority < p->priority)
-                {
-                    p->next = i->next;
-                    i->next = p;
-                    break;
-                }
-            }
-            else
-            {
-                i->next = p;
-                last=p;
-                break;
-            }
-        }
-    }	
-    return;
+  else
+  {
+      for(struct node *i = head; i != NULL; i = i->next)
+      {
+          if(i->next)
+          {
+              if(i->next->priority < p->priority)
+              {
+                  p->next = i->next;
+                  i->next = p;
+                  break;
+              }
+          }
+          else
+          {
+              i->next = p;
+              last=p;
+              break;
+          }
+      }
+  }	
+  return;
 }
 
 

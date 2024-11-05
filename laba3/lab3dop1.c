@@ -96,7 +96,8 @@ struct node *find(char *name)
 			return struc;
 		}
 		struc = struc->next;
-	}
+	}exec = --no-startup-id hyprctl dispatch workspace 9 
+
 	printf("Элемент не найден\n");
 	return NULL;
 }
