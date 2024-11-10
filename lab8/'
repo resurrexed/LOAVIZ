@@ -4,7 +4,6 @@
 #include <new>
 #include <vector>
 #include <queue>
-#include <iomanip>
 using namespace std;
 class Matrix {
 public:
@@ -63,10 +62,11 @@ int main()
   graph.GenerateMatrix();
   graph.PrintMatrix();
   cout<<endl;
-  double start=clock();
+  float start=clock();
   graph.BFS(0);
-  double finish=clock();
-  cout<<std::fixed<<endl;
-  cout<<"Time of BFS- "<<(finish-start)/CLOCKS_PER_SEC<<endl;
+  float finish=clock(); timetest=clock()-timetest;
+
+  cout<<endl;
+  cout<<"Time of BFS- %f"<<(finish-start)/CLOCKS_PER_SEC<<endl;
   return 0;
 }
