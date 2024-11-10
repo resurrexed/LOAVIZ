@@ -1,0 +1,15 @@
+BFS with our queue (to make the comparison fair, the percentage of edges is 50% everywhere.)
+amount               time
+100                  0.000068s
+500                  0.001472s
+1000                 0.005635s
+10000                0.550068s
+
+BFS with queue class in c++
+amount               time
+100                  0.00028s
+500                  0.006846s
+1000                 0.027056s
+10000                2.643263s
+
+Conclusion: our solution is faster.

@@ -94,5 +94,5 @@ int main()
   float start = clock();
   BFS(0, matrix, size, NUM);
   float finish=clock();
-  printf("\nTime of BFS %f", (finish-start)/1000);
+  printf("\nTime of BFS %f", (finish-start)/CLOCKS_PER_SEC);
 }
