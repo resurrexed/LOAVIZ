@@ -48,7 +48,6 @@ void BFS(int start, int** matrix, int size, bool* NUM)
 {
   queue_push(start);
   NUM[start] = true;
-
   while (!(queue_empty())) {
     int v = queue_front();
     queue_pop();

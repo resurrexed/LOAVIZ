@@ -48,10 +48,23 @@ public:
         }
       }
     }
-    for (int i = 0; i < size; ++i) 
+   for(int i=0;i<size;i++)
+   {
+     cout << "Vertex " << i << ": " << DIST[i] << endl;
+   }
+  }
+  void PrintLevel()
+  {
+    for (int level = 0; level < size; ++level) 
     {
-      cout << "Vertex " << i << ": " << DIST[i] << endl;
-    }
+        cout << "Уровень " << level << ": ";
+        for (int i = 0; i < size; ++i) {
+            if (DIST[i] == level) {
+                cout << i << " ";
+            }
+        }
+        cout << endl;
+    }  
   }
 private:
   int size;
@@ -72,10 +85,10 @@ int main()
   cout<<endl;
   cout<<"Enter vertex to start BFSD(start from zero) ";  
   cin>>sourceVertex;
-  cout << "Distances from vertex " << sourceVertex << ":" << endl;
   double start=clock();
   graph.BFSD(sourceVertex);
   double finish=clock();  
   cout<<"Time of BFSD- "<<(finish-start)/CLOCKS_PER_SEC<<endl;
+  graph.PrintLevel();
   return 0;
 }
