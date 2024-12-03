@@ -1,7 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
-#include <string>
+#include <cstring>
 #include <new>
 #include <vector>
 #include <queue>
@@ -10,7 +10,7 @@
 using namespace std;
 class Matrix {
 public:
-  Matrix(int size, int weighted, int directed) : size(size), directed(directed), weighted(weighted), matrix(size, vector<int>(size)), NUM(size, false), DIST(size, -1) {}
+  Matrix(int size, int weighted, int directed) : size(size), directed(directed), weighted(weighted), matrix(size, vector<int>(size)), NUM(size, false), DIST(size, INT_MAX) {}
   void PrintMatrix(){
     for(int i=0;i<size;i++)
     {
@@ -81,27 +81,38 @@ public:
       }
     }
   }
-  void BFSD(int start) 
-  {
+ void BFSD(int start) 
+{
     queue<int> q;
-    q.push(start);
-    DIST[start]=0;
-    while(!q.empty())
-    {
-      start=q.front();
-      q.pop();
-      for(int i=0;i<size;i++)
-      {
-        if(matrix[start][i]>0 && DIST[i]==-1)
-        {
-          q.push(i);
-          DIST[i]=DIST[start]+matrix[start][i];
-        }
-      }
+    vector<bool> inQueue(size, false);  // Массив для отслеживания вершин в очереди
+    
+    // Инициализация расстояний
+    for(int i = 0; i < size; i++) {
+        DIST[i] = INT_MAX;
     }
     
-  }
-  void PrintBFSD()
+    q.push(start);
+    inQueue[start] = true;
+    DIST[start] = 0;
+
+    while(!q.empty())
+    {
+        start = q.front();
+        q.pop();
+        inQueue[start] = false;  // Вершина больше не в очереди
+
+        for(int i = 0; i < size; i++)
+        {
+            // Если есть ребро и можно улучшить расстояние
+            if(matrix[start][i] > 0 && DIST[start] + matrix[start][i] < DIST[i])
+            {
+                DIST[i] = DIST[start] + matrix[start][i];
+                q.push(i);
+            }
+        }
+    }
+}
+void PrintBFSD()
   {
     for (int i = 0; i < size; ++i) 
     {
@@ -122,12 +133,16 @@ public:
         for(int j = 0; j < size; j++)
         {
             if(DIST[j] != INT_MAX && DIST[j] > eccentricity && i!=j)
-                eccentricity = DIST[j];
+            {
+              eccentricity = DIST[j];
+              cout<<eccentricity<<endl;
+                if(eccentricity < radius && eccentricity!=-1)
+                  radius = eccentricity;
+                if(eccentricity > diameter)
+                  diameter = eccentricity;
+            }
         }
-        if(eccentricity < radius && eccentricity>0)
-            radius = eccentricity;
-        if(eccentricity > diameter)
-            diameter = eccentricity;
+      
     }
     
     cout << "Radius of the graph: " << radius << endl;
@@ -143,20 +158,19 @@ private:
 };
 int main(int argc, char *argv[])
 {
+  //srand(time(NULL));
   int directed=0, weighted=0, size, start;
   if(argc>1)
   {
     for(int i=0;i<argc; ++i)
     {
-      if (argv[i]=="-directed") directed=stoi(argv[i+1]);
-      if (argv[i]=="-weighted") weighted=stoi(argv[i+1]);
+      if (strcmp(argv[i],"-directed")==0) directed=1;
+      if (strcmp(argv[i],"-weighted")==0) weighted=1;
     }
-    if(directed > 1) directed = 1;
-    if(weighted > 1) weighted = 1;
   }
   else
   {
-    cout<<"We will consider our graph to be undirected and unweighted"<<endl;
+    cout<<"We will consider our graph to be undirected and unweighted\n(run program with \n-direct for directed graph\n -weighted for weighted graph)"<<endl;
   }
   cout<<"Please enter size of matrix"<<endl;
   cin>>size;
@@ -167,5 +181,5 @@ int main(int argc, char *argv[])
   cin>>start;
   graph.BFSD(start);
   graph.PrintBFSD();
-  graph.Radius_Diameter();
+  //graph.Radius_Diameter();
 }
