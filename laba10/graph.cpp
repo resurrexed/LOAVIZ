@@ -81,7 +81,7 @@ public:
       }
     }
   }
-  void BFSD(int start)
+  void BFSD(int start) 
   {
     queue<int> q;
     q.push(start);
@@ -110,12 +110,26 @@ public:
   }
   void Radius_Diameter()
   {
-    int radius=INT_MAX, diameter=0;
-    for(int i=0;i<size;i++)
+    int radius = INT_MAX;
+    int diameter = 0;
+    
+    // Для каждой вершины
+    for(int i = 0; i < size; i++)
     {
-      if(DIST[i] < radius) radius=DIST[i];
-      if(DIST[i] > diameter) diameter=DIST[i];
+        BFSD(i);
+        
+        int eccentricity = 0;
+        for(int j = 0; j < size; j++)
+        {
+            if(DIST[j] != INT_MAX && DIST[j] > eccentricity && i!=j)
+                eccentricity = DIST[j];
+        }
+        if(eccentricity < radius && eccentricity>0)
+            radius = eccentricity;
+        if(eccentricity > diameter)
+            diameter = eccentricity;
     }
+    
     cout << "Radius of the graph: " << radius << endl;
     cout << "Diameter of the graph: " << diameter << endl;
   }
